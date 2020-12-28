@@ -1,0 +1,35 @@
+Attachments get_payload
+=======================
+
+decode  is_multipart  result
+------  ------------  ------------------------------
+True    True          +None
+True    False         +_payload decoded (bytes)
+False   True          +_payload (a list)
+False   False         _payload (*)
+
+* - some other encoding is used, or the header is missing,
+    or if the payload has bogus data (i.e. bogus base64 or uuencoded data),
+    the payload is returned as-is.
+
+
+many uids command
+=================
+error example for 22000 uids in yandex:
+    imap_tools.errors.MailboxCopyError: Response status "OK" expected, but "NO" received.
+    Data: [b'command or literal size is too large']
+
+
+email lib
+=========
+Доступен email.message.EmailMessage вместо Message, есть смысл туда заглядывать по логике разбора
+
+self.obj = email.message_from_bytes(raw_message_data, _class=EmailMessage) можно так, пока не вижу смысла
+пробовал iter_attachments для MailMessage.attachments - не работает с инлайн вложениями
+
+утилиты https://docs.python.org/release/3.8.1/library/email.utils.html
+
+
+icons
+=====
+📨 📬 📪 📭 📫 ✉ 📧 🖂 🖃 🖅 📩
