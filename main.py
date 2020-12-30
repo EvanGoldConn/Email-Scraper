@@ -34,7 +34,11 @@ def numToCity(number):
 def scraper(username, pwd, mailboxType, serverType, subjectScraper):
     burlCountyWarning = 'The information in this e-mail and any attachment therein is confidential and for use by the addressee only. If you are not the intended recipient, please return the email to the sender and delete it from your computer. Although Burlington County attempts to sweep e-mail attachments for viruses, it does not guarantee that they are virus-free and accepts no liability for any damage sustained as a result of viruses.'
     newCadFinal = 'FINAL REPRT: Final'
-    oldCadFinal = '** ** ** ** ** ** ** ** ** ** ** ** FINAL REPORT ** ** ** ** ** ** ** ** ** ** ** **'
+    
+    oldCadFinal = "** ** ** ** ** ** ** ** ** FINAL REPORT ** ** ** ** ** ** ** ** **"
+
+            
+    
     with MailBox(serverType).login(username, pwd, mailboxType) as mailbox:
         for msg in mailbox.fetch(A(AND(text=burlCountyWarning, date_gte=datetime.date(2020, 12, 26)), OR(body=[newCadFinal, oldCadFinal]))):
             #condition is containing 1. burlCountyWarning, 2. since the proper date 3. newCadFinalReport OR oldCadFinalReport
@@ -55,6 +59,9 @@ def scraper(username, pwd, mailboxType, serverType, subjectScraper):
 
 
             '''
+
+
+                
             if(newCadFinal in body): #it's the new CAD report!
 
                 
@@ -75,23 +82,30 @@ def scraper(username, pwd, mailboxType, serverType, subjectScraper):
 
                 print(curDate, curTime, curAddress, curCity, curType)
                 
-                
+##                writeToFile(curDate, curTime, curAddress, curCity, curType)
             
             elif(oldCadFinal in body): #it's the old CAD report!
 
                 curDate = str(msg.date)
                 curDate = curDate[:str(curDate).find(' ')].strip() #date
 
+                initTime = body[body.find("Unit: E909"):body.find("Unit: E909")+100]
+                curTime = initTime[initTime.find("DSP:")+13:initTime.find("ENR:")-4].strip() #dispatch time
+
+                curAddress = body[body.find("Incident Location:")+18:body.find("Venue:")].strip()
+
+                curCity = body[body.find("Venue:")+6:body.find("Venue:")+17].strip()
+
+                curType = body[body.find("Incident Type  . :")+18:body.find("Priority:")-5].strip()
+                
+
                 '''---------------------------PLACHOLDER---------------------------
 
-                    Scrape
-                    dispatch time
-                    location (address)
-                    type
-                    city (venue)
+                    CREATE DEF writeToFile(curDate, curTime, curAddress, curCity, curType) AND THE PROGRAM IS DONE!
                 '''
-
-
+##                writeToFile(curDate, curTime, curAddress, curCity, curType)
+                print(curDate, curTime, curAddress, curCity, curType)
+##                print(curDate)
 
                 
             print('-----------------------------------------------------------')
